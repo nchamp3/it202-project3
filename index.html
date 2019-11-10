@@ -15,17 +15,18 @@
       // background.src = "./Eastern_Veil_Nebula.jpg";
       background.src = "./bg.jpg"
 
-      let px = 100;
-      let py = 100;
+      let cwidth = c.width;
+      let cheight = c.height;
+      let px = 35;
+      let py = Math.random() * cheight;
       let score = 0;
       let lives = 3;
       let level = 1;
       let circles = [];
       let i = 0;
       // let speed = Math.floor(Math.random() * 10) + level;
-      let radius = 20;
-      let cwidth = c.width;
-      let cheight = c.height;
+      let radius = 30;
+
 
       // clear the canvas
       // ctx.clearRect(0, 0, c.width, c.height);
@@ -51,8 +52,11 @@
         if(circle.type == "b") {
           ctx.fillStyle = "lightgreen";
         }
-        else {
+        else if(circle.type == "h") {
           ctx.fillStyle = "red";
+        }
+        else {
+          ctx.fillStyle = "blue";
         }
         ctx.closePath();
         //Fill our arc/circle!
@@ -79,6 +83,13 @@
         createCircle("h");
       }
 
+      // create player
+      let player = {};
+      player.x = px;
+      player.y = py;
+      player.type = "p";
+
+
 
       const gameController = () => {
 
@@ -86,9 +97,7 @@
 
         ctx.drawImage(background,0,0);
 
-        console.log("Run");
-
-
+        draw(player)
 
         for(c of circles)
         {
