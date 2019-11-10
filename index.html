@@ -14,7 +14,6 @@
     let ctx = c.getContext("2d");
 
     let background = new Image();
-    // background.src = "./Eastern_Veil_Nebula.jpg";
     background.src = "./bg.jpg"
 
     let cwidth = c.width;
@@ -22,7 +21,7 @@
     let px = 35;
     let py = 300;
     let score = 0;
-    let lives = 3;
+    let lives = 1;
     let level = 1;
     let circles = [];
     let i = 0;
@@ -114,6 +113,10 @@
       showLives();
       showLevel();
 
+      if(isGameOver()){
+        return;
+      }
+
       window.requestAnimationFrame(gameController);
 
     }
@@ -134,6 +137,22 @@
       ctx.font = "25px Georgia";
       ctx.fillStyle = "lightblue";
       ctx.fillText("Level: " + level, 10, 30);
+    }
+
+    const isGameOver = () => {
+      if(lives == 0)
+      {
+        ctx.font = "90px Georgia";
+        // ctx.fillStyle = "lightblue";
+        let gradient = ctx.createLinearGradient(0, 0, cwidth, 0);
+        gradient.addColorStop("0", "#FFD44A");
+        gradient.addColorStop("1", "#9658AA");
+        // Fill with gradient
+        ctx.fillStyle = gradient;
+        ctx.fillText("Game Over!", 350, 250);
+
+        return true;
+      }
     }
 
     const movePlayer = (e) => {
