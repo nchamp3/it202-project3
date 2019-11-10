@@ -1,172 +1,153 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>IT202-Project 3</title>
-    </head>
-  <body>
 
-    <canvas id="myCanvas" width="1200" height="700"></canvas>
+<head>
+  <title>IT202-Project 3</title>
+</head>
 
-    <script>
-      let c = document.getElementById("myCanvas");
-      let ctx = c.getContext("2d");
+<body>
 
-      let background = new Image();
-      // background.src = "./Eastern_Veil_Nebula.jpg";
-      background.src = "./bg.jpg"
+  <canvas id="myCanvas" width="1200" height="700"></canvas>
 
-      let cwidth = c.width;
-      let cheight = c.height;
-      let px = 35;
-      let py = 300;
-      let score = 0;
-      let lives = 3;
-      let level = 1;
-      let circles = [];
-      let i = 0;
-      // let speed = Math.floor(Math.random() * 10) + level;
-      let radius = 30;
+  <script>
+    let c = document.getElementById("myCanvas");
+    let ctx = c.getContext("2d");
 
+    let background = new Image();
+    // background.src = "./Eastern_Veil_Nebula.jpg";
+    background.src = "./bg.jpg"
 
-      // clear the canvas
-      // ctx.clearRect(0, 0, c.width, c.height);
-      // background.onload = function(){
-      //     ctx.drawImage(background,0,0);
+    let cwidth = c.width;
+    let cheight = c.height;
+    let px = 35;
+    let py = 300;
+    let score = 0;
+    let lives = 3;
+    let level = 1;
+    let circles = [];
+    let i = 0;
+    let radius = 30;
+    let diameter = radius*2;
+
+    const createCircle = (t) => {
+      let circle = {};
+      circle.x = cwidth;
+      circle.y = Math.random() * cheight;
+      if (circle.y > cheight - radius) circle.y = cheight - radius;
+      circle.type = t;
+      circle.speed = Math.floor(Math.random() * 10) + level;
+      circles.push(circle);
+    }
+
+    const draw = (circle) => {
+      //Start drawing
+      ctx.beginPath();
+
+      ctx.arc(circle.x, circle.y, radius, 0, Math.PI * 2);
+      if (circle.type == "b") {
+        ctx.fillStyle = "lightgreen";
+      } else if (circle.type == "h") {
+        ctx.fillStyle = "red";
+      } else {
+        ctx.fillStyle = "blue";
+      }
+      ctx.closePath();
+      ctx.fill();
+    }
+
+    const move = (circle) => {
+      circle.x = circle.x - circle.speed;
+
+      // if (circle.x < 0) {
+      //   circle.x = cwidth;
+      //   circle.y = Math.random() * cheight;
+      //   if (circle.y > cheight - radius) circle.y = cheight - radius;
+      //   circle.speed = Math.floor(Math.random() * 10) + level;
       // }
 
-      const createCircle = (t) => {
-        let circle = {};
+      let distToPlayer = Math.sqrt(Math.pow(circle.x-player.x,2) + Math.pow(circle.y-player.y,2));
+
+      // reset circle
+      if(distToPlayer <= diameter || circle.x < 0){
         circle.x = cwidth;
         circle.y = Math.random() * cheight;
-        if(circle.y > cheight - radius) circle.y = cheight - radius;
-        circle.type = t;
-        circle.speed =  Math.floor(Math.random() * 10) + level;
-        circles.push(circle);
-      }
+        if (circle.y > cheight - radius) circle.y = cheight - radius;
+        circle.speed = Math.floor(Math.random() * 10) + level;
 
-      const draw = (circle) => {
-        //Start drawing
-        ctx.beginPath();
-
-        //Draw an arc. Arguments are x (pixels), y (pixels), radius (pixels), startPoint (radians), endPoint (radians)
-        ctx.arc(circle.x, circle.y, radius, 0, Math.PI * 2);
-        if(circle.type == "b") {
-          ctx.fillStyle = "lightgreen";
-        }
-        else if(circle.type == "h") {
-          ctx.fillStyle = "red";
-        }
-        else {
-          ctx.fillStyle = "blue";
-        }
-        ctx.closePath();
-        //Fill our arc/circle!
-        ctx.fill();
-      }
-
-      const move = (circle) => {
-        circle.x = circle.x - circle.speed;
-        // console.log(circle.x);
-
-        if(circle.x < 0)
-        {
-          circle.x = cwidth;
-          circle.y = Math.random() * cheight;
-          if(circle.y > cheight - radius) circle.y = cheight - radius;
-          circle.speed =  Math.floor(Math.random() * 10) + level;
+        // adjust score/lives if collision
+        if(distToPlayer <= diameter){
+          if(circle.type == "h")
+            lives -= 1;
+          else{
+            score += 1;
+            if(score % 2 == 0)
+              level += 1;
+          }
         }
       }
 
-      for (i = 1; i <= 4 ; i++){
-        createCircle("b");
+
+    }
+
+    for (i = 1; i <= 4; i++) {
+      createCircle("b");
+    }
+
+    for (i = 1; i <= 2; i++) {
+      createCircle("h");
+    }
+
+    // create player
+    let player = {};
+    player.x = px;
+    player.y = py;
+    player.type = "p";
+
+
+    const gameController = () => {
+
+      ctx.clearRect(0, 0, c.width, c.height);
+
+      ctx.drawImage(background, 0, 0);
+
+      draw(player)
+
+      for (c of circles) {
+        draw(c);
+        move(c);
       }
 
-      for (i = 1; i <= 2; i++){
-        createCircle("h");
-      }
-
-      // create player
-      let player = {};
-      player.x = px;
-      player.y = py;
-      player.type = "p";
-
-
-
-    //   function movePlayer(e){
-    //     switch(e.keyCode) {
-    //       case 38: // up
-    //           py  = py  - 20;
-    //           // edge detection to not go off the map
-    //           if (py < radius) {
-    //               py = radius;
-    //           }
-    //           break;
-    //       case 40: // down
-    //           py = py+20;
-    //           // edge detection to not go off map
-    //           if (py > cheight - radius) {
-    //               py = cheight - radius;
-    //           }
-    //           break;
-    //    }
-    // e.preventDefault();
-    //   }
-    //
-    //   window.addEventListener("keydown", movePlayer);
-
-
-      const gameController = () => {
-
-        ctx.clearRect(0, 0, c.width, c.height);
-
-        ctx.drawImage(background,0,0);
-
-        draw(player)
-
-        for(c of circles)
-        {
-          draw(c);
-          move(c);
-        }
-
-        window.requestAnimationFrame(gameController);
-
-      }
-
-      const movePlayer = (e) => {
-        switch(e.keyCode) {
-          case 38: // up
-              py  -= 25;
-              // edge detection to not go off the map
-              if (py < radius) {
-                  py = radius;
-              }
-              player.y = py;
-              break;
-          case 40: // down
-              py += 25;
-              // edge detection to not go off map
-              if (py > cheight - radius) {
-                  py = cheight - radius;
-              }
-              player.y = py;
-              break;
-        }
-    // e.preventDefault();
-      }
-      window.addEventListener("keydown", movePlayer, false);
-
-
-
-      // gameController();
       window.requestAnimationFrame(gameController);
 
+    }
+
+    const movePlayer = (e) => {
+      switch (e.keyCode) {
+        case 38: // up
+          py -= 25;
+          // edge detection to not go off the map
+          if (py < radius) {
+            py = radius;
+          }
+          player.y = py;
+          break;
+        case 40: // down
+          py += 25;
+          // edge detection to not go off map
+          if (py > cheight - radius) {
+            py = cheight - radius;
+          }
+          player.y = py;
+          break;
+      }
+    }
+    window.addEventListener("keydown", movePlayer);
 
 
 
+    window.requestAnimationFrame(gameController);
+  </script>
 
-    </script>
+</body>
 
-  </body>
 </html>
