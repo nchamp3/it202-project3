@@ -77,15 +77,15 @@
           }
         }
       }
-
-
     }
 
+    // create benefit objects
     for (i = 1; i <= 4; i++) {
       createCircle("b");
     }
 
-    for (i = 1; i <= 2; i++) {
+    // create harm objects
+    for (i = 1; i <= 3; i++) {
       createCircle("h");
     }
 
@@ -96,6 +96,7 @@
     player.type = "p";
 
 
+    // controls gameplay
     const gameController = () => {
 
       ctx.clearRect(0, 0, c.width, c.height);
@@ -109,9 +110,7 @@
         move(c);
       }
 
-      showScore();
-      showLives();
-      showLevel();
+      showDetails();
 
       if(isGameOver()){
         return;
@@ -121,33 +120,34 @@
 
     }
 
-    const showScore = () => {
+    // show lives/score/level
+    const showDetails = () => {
+
+      //show score
       ctx.font = "50px Georgia";
       ctx.fillStyle = "lightblue";
       ctx.fillText("Score: " + score, 900, 80);
-    }
 
-    const showLives = () => {
+      //show lives
       ctx.font = "50px Georgia";
       ctx.fillStyle = "lightblue";
       ctx.fillText("Lives: " + lives, 900, 140);
-    }
 
-    const showLevel = () => {
+      // show showLevel
       ctx.font = "25px Georgia";
       ctx.fillStyle = "lightblue";
       ctx.fillText("Level: " + level, 10, 30);
+
     }
 
+    // check if game is over
     const isGameOver = () => {
       if(lives == 0)
       {
         ctx.font = "90px Georgia";
-        // ctx.fillStyle = "lightblue";
         let gradient = ctx.createLinearGradient(0, 0, cwidth, 0);
         gradient.addColorStop("0", "#FFD44A");
         gradient.addColorStop("1", "#9658AA");
-        // Fill with gradient
         ctx.fillStyle = gradient;
         ctx.fillText("Game Over!", 350, 250);
 
@@ -155,11 +155,11 @@
       }
     }
 
+    // get player movement
     const movePlayer = (e) => {
       switch (e.keyCode) {
         case 38: // up
           py -= 25;
-          // edge detection to not go off the map
           if (py < radius) {
             py = radius;
           }
@@ -167,7 +167,6 @@
           break;
         case 40: // down
           py += 25;
-          // edge detection to not go off map
           if (py > cheight - radius) {
             py = cheight - radius;
           }
