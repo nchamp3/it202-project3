@@ -58,13 +58,6 @@
     const move = (circle) => {
       circle.x = circle.x - circle.speed;
 
-      // if (circle.x < 0) {
-      //   circle.x = cwidth;
-      //   circle.y = Math.random() * cheight;
-      //   if (circle.y > cheight - radius) circle.y = cheight - radius;
-      //   circle.speed = Math.floor(Math.random() * 10) + level;
-      // }
-
       let distToPlayer = Math.sqrt(Math.pow(circle.x-player.x,2) + Math.pow(circle.y-player.y,2));
 
       // reset circle
@@ -117,8 +110,30 @@
         move(c);
       }
 
+      showScore();
+      showLives();
+      showLevel();
+
       window.requestAnimationFrame(gameController);
 
+    }
+
+    const showScore = () => {
+      ctx.font = "50px Georgia";
+      ctx.fillStyle = "lightblue";
+      ctx.fillText("Score: " + score, 900, 80);
+    }
+
+    const showLives = () => {
+      ctx.font = "50px Georgia";
+      ctx.fillStyle = "lightblue";
+      ctx.fillText("Lives: " + lives, 900, 140);
+    }
+
+    const showLevel = () => {
+      ctx.font = "25px Georgia";
+      ctx.fillStyle = "lightblue";
+      ctx.fillText("Level: " + level, 10, 30);
     }
 
     const movePlayer = (e) => {
