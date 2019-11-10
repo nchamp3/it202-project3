@@ -18,7 +18,7 @@
       let cwidth = c.width;
       let cheight = c.height;
       let px = 35;
-      let py = Math.random() * cheight;
+      let py = 300;
       let score = 0;
       let lives = 3;
       let level = 1;
@@ -38,6 +38,7 @@
         let circle = {};
         circle.x = cwidth;
         circle.y = Math.random() * cheight;
+        if(circle.y > cheight - radius) circle.y = cheight - radius;
         circle.type = t;
         circle.speed =  Math.floor(Math.random() * 10) + level;
         circles.push(circle);
@@ -71,6 +72,7 @@
         {
           circle.x = cwidth;
           circle.y = Math.random() * cheight;
+          if(circle.y > cheight - radius) circle.y = cheight - radius;
           circle.speed =  Math.floor(Math.random() * 10) + level;
         }
       }
@@ -91,6 +93,29 @@
 
 
 
+    //   function movePlayer(e){
+    //     switch(e.keyCode) {
+    //       case 38: // up
+    //           py  = py  - 20;
+    //           // edge detection to not go off the map
+    //           if (py < radius) {
+    //               py = radius;
+    //           }
+    //           break;
+    //       case 40: // down
+    //           py = py+20;
+    //           // edge detection to not go off map
+    //           if (py > cheight - radius) {
+    //               py = cheight - radius;
+    //           }
+    //           break;
+    //    }
+    // e.preventDefault();
+    //   }
+    //
+    //   window.addEventListener("keydown", movePlayer);
+
+
       const gameController = () => {
 
         ctx.clearRect(0, 0, c.width, c.height);
@@ -108,6 +133,31 @@
         window.requestAnimationFrame(gameController);
 
       }
+
+      const movePlayer = (e) => {
+        switch(e.keyCode) {
+          case 38: // up
+              py  -= 25;
+              // edge detection to not go off the map
+              if (py < radius) {
+                  py = radius;
+              }
+              player.y = py;
+              break;
+          case 40: // down
+              py += 25;
+              // edge detection to not go off map
+              if (py > cheight - radius) {
+                  py = cheight - radius;
+              }
+              player.y = py;
+              break;
+        }
+    // e.preventDefault();
+      }
+      window.addEventListener("keydown", movePlayer, false);
+
+
 
       // gameController();
       window.requestAnimationFrame(gameController);
