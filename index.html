@@ -27,6 +27,7 @@
     let i = 0;
     let radius = 30;
     let diameter = radius*2;
+    let animationFrame;
 
     const createCircle = (t) => {
       let circle = {};
@@ -112,11 +113,12 @@
 
       showDetails();
 
-      if(isGameOver()){
-        return;
+      if(!isGameOver()) {
+        animationFrame = window.requestAnimationFrame(gameController);
       }
-
-      window.requestAnimationFrame(gameController);
+      else {
+        window.cancelAnimationFrame(animationFrame);
+      }
 
     }
 
